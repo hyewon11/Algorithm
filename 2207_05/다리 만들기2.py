@@ -1,5 +1,5 @@
-# (미해결)
 # https://www.acmicpc.net/problem/17472
+import sys, collections
 N, M = map(int, sys.stdin.readline().split())
 BOARD = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
 NR, NC = [0, 0, 1, -1], [1, -1, 0, 0]
@@ -43,6 +43,7 @@ def find_bridge(start):
                 q.append((nr, nc, d, bridge_length + 1))
     return distance
 
+# kruskal
 bridges = []
 for i in range(cnt):
     distance = find_bridge(i + 2)
@@ -64,8 +65,8 @@ def union_parent(parent, x, y):
         parent[x] = y
 
 bridges.sort()
-result, parent = 0, [0] * 7
-for i in range(1, cnt + 1):
+result, parent = 0, [0] * 6
+for i in range(cnt):
     parent[i] = i
 
 for d, start, end in bridges:
@@ -73,4 +74,10 @@ for d, start, end in bridges:
         union_parent(parent, start, end)
         result += d
 
-print(result) if result != 0 else print(-1)
+# parent node is different -> not linked
+for i in range(cnt):
+    parent[i] = parent[parent[i]]
+if len(set(parent)) != 1:
+    result = -1
+
+print(result)
