@@ -1,0 +1,38 @@
+# https://www.acmicpc.net/problem/12015
+# 이분탐색 이용 → 1. 직접구현(4368ms) 2. bisect 이용(944ms)
+# 1
+import sys
+N = int(sys.stdin.readline())
+A = list(map(int, sys.stdin.readline().split()))
+
+dp = [A[0]]
+for i in range(1, N):
+    if A[i] > dp[-1]:
+        dp.append(A[i])
+    else:
+        left, right, value = 0, len(dp) - 1, 0
+        while left <= right:
+            mid = (left + right) // 2
+            if dp[mid] >= A[i]:
+                value = mid
+                right = mid - 1
+            else:
+                left = mid + 1
+        dp[value] = A[i]
+
+print(len(dp))
+
+# 2
+import sys, bisect
+N = int(sys.stdin.readline())
+A = list(map(int, sys.stdin.readline().split()))
+
+dp = [A[0]]
+for i in range(1, N):
+    if A[i] > dp[-1]:
+        dp.append(A[i])
+    else:
+        idx = bisect.bisect_left(dp, A[i])
+        dp[idx] = A[i]
+
+print(len(dp))
